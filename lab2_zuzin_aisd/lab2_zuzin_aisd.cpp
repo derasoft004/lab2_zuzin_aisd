@@ -22,8 +22,8 @@ public:
         head = nullptr;
         size = 0;
         Node<T>* temp = other.head;
-        while (temp != nullptr) {
-            push_tail(temp->data);
+        while (temp != other.head) {
+            push_tail(temp->value);
             temp = temp->next;
         }
     }
@@ -38,6 +38,10 @@ public:
         return head;
     }
 
+    int get_size() {
+        return size;
+    }
+
     ~LinkedList() {
         while (head != nullptr) {
             pop_head();
@@ -50,8 +54,8 @@ public:
                 pop_head();
             }
             Node<T>* temp = other.head;
-            while (temp != nullptr) {
-                push_tail(temp->data);
+            while (temp != other.head) {
+                push_tail(temp->value);
                 temp = temp->next;
             }
         }
@@ -80,7 +84,9 @@ public:
         do {
             push_tail(temp->value);
             temp = temp->next;
+            size++;
         } while (temp != other.get_head());
+        temp = get_head();
     }
 
     void push_head(T value) {
@@ -106,7 +112,9 @@ public:
         do {
             push_head(temp->value);
             temp = temp->next;
+            size++;
         } while (temp != other.get_head());
+        temp = get_head();
     }
 
     void pop_head() {
@@ -152,26 +160,27 @@ public:
 
     void delete_node(T val) {
         Node<T>* current = head;
-        Node<T>* prev = nullptr;
+        Node<T>* temp = nullptr;
 
-        while ((current != nullptr) && (current->value == val)) {
-            // Invalid operands to binary expression ('Student<int>' and 'Student<int>')
+        while (current != nullptr && current->value == val) {
             pop_head();
             current = head;
+            size--;
         }
-        do {
-            while ((current != nullptr) && (current->value != val)) {
-                prev = current;
+
+        while (current != nullptr) {
+            while (current != nullptr && current->value != val) {
+                temp = current;
                 current = current->next;
+                if (current == head) return;
             }
             if (current == nullptr) return;
-
-            prev->next = current->next;
+            temp->next = current->next;
 
             delete current;
 
-            current = prev;
-        } while (current != head);
+            current = temp->next;
+        }
     }
 
     T& operator[](int index) const {
@@ -280,6 +289,7 @@ int main() {
     cout << "rename 0th el as 1: " << students << endl;
     students.push_tail(st2);
     students.push_tail(st3);
+    students.push_tail(st4);
     students.push_tail(st2);
     students.push_tail(st4);
     students.push_tail(st5);
@@ -300,5 +310,6 @@ int main() {
     cout << "append juniors to full list in tail 1-2th course: " << students << endl;
     students.push_head(seniors);
     cout << "append seniors to full list in head 3-5th course: " << students << endl;
+    
 
 }
