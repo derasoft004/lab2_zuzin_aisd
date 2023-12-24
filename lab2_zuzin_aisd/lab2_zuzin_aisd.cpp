@@ -62,6 +62,18 @@ public:
         return *this;
     }
 
+
+
+    void push_tail(LinkedList<T>& other) {
+        Node<T>* temp = other.get_head();
+        do {
+            push_tail(temp->value);
+            temp = temp->next;
+            size++;
+        } while (temp != other.get_head());
+        temp = get_head();
+    }
+
     void push_tail(T value) {
         Node<T>* newNode = new Node<T>{ value, nullptr };
         if (head == nullptr) {
@@ -77,16 +89,6 @@ public:
             newNode->next = head;
         }
         size++;
-    }
-
-    void push_tail(LinkedList<T>& other) {
-        Node<T>* temp = other.get_head();
-        do {
-            push_tail(temp->value);
-            temp = temp->next;
-            size++;
-        } while (temp != other.get_head());
-        temp = get_head();
     }
 
     void push_head(T value) {
@@ -107,14 +109,41 @@ public:
         size++;
     }
 
+    //    void push_head(LinkedList<T>& other) {
+    //        LinkedList<T> reverse;
+    //        Node<T>* temp1 = other.head;
+    //        do {
+    //            reverse.push_head(temp1->value);
+    //            temp1 = temp1->next;
+    //        } while (temp1 != reverse.get_head());
+    //        temp1 = other.head;
+    //
+    //        Node<T>* temp = other.head;
+    //        do {
+    //            push_head(temp->value);
+    //            temp = temp->next;
+    //            size++;
+    //        } while (temp != other.get_head());
+    //        temp = get_head();
+    //    }
     void push_head(LinkedList<T>& other) {
-        Node<T>* temp = other.head;
-        do {
-            push_head(temp->value);
+        Node<T>* temp = other.get_head();
+        LinkedList<T> reverse;
+        while (temp != nullptr) {
+            reverse.push_head(temp->value);
             temp = temp->next;
-            size++;
-        } while (temp != other.get_head());
-        temp = get_head();
+            if (temp == other.get_head()) {
+                break;
+            }
+        }
+        Node<T>* temp1 = reverse.get_head();
+        while (temp1 != nullptr) {
+            this->push_head(temp1->value);
+            temp1 = temp1->next;
+            if (temp1 == reverse.get_head()) {
+                break;
+            }
+        }
     }
 
     void pop_head() {
@@ -191,7 +220,7 @@ public:
         for (int i = 0; i < index; i++) {
             current = current->next;
         }
-        return current->data;
+        return current->value;
     }
 
     T& operator[](int index) {
@@ -305,11 +334,10 @@ int main() {
 
     students.delete_node(3);
     cout << "delete all 3: " << students << endl;
-
+    //    juniors.push_tail(8);
     students.push_tail(juniors);
     cout << "append juniors to full list in tail 1-2th course: " << students << endl;
     students.push_head(seniors);
     cout << "append seniors to full list in head 3-5th course: " << students << endl;
-    
 
 }
